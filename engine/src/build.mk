@@ -27,13 +27,15 @@ endif
 
 #编译配置
 INCLUDES := $(GAME_ROOT)/src
+INCLUDES := $(GAME_ROOT)/src/lib
 INCLUDES += $(shell find $(CURDIR) -type d)
 INCLUDES += $(shell find $(GAME_ROOT)/src/lib -type d)
 
 #链接配置
 LDFLAGS := -L$(LIBDIR)
 ifndef NO_BASE_LIBS
-MY_LIBS += common 
+MY_LIBS += common thread
+MULIT_THREAD = 1
 endif
 LDLIBS := $(addprefix -l, $(MY_LIBS))
 
@@ -47,7 +49,7 @@ INCLUDES += $(GAME_ROOT)/src/lib/test
 LDLIBS += -ltest
 endif
 
-ifndef MULIT_THREAD
+ifdef MULIT_THREAD
 LDLIBS += -lpthread
 endif
 
@@ -62,8 +64,18 @@ ifndef CXX
 CXX = g++
 endif
 
+CXXFLAGS += -std=c++11
+
 # -Wall 生成所有警告信息
 CXXFLAGS += -Wall 
+# 当强制转化丢掉了类型修饰符时给出警告。 -Wall 并不会打开此项
+CXXFLAGS += -Wcast-qual
+# 当一个局部变量遮盖住了另一个局部变量，或者全局变量时，给出警告。很有用的选项，建议打开。 -Wall 并不会打开此项
+CXXFLAGS += -Wshadow
+# 如果编译器探测到永远不会执行到的代码，就给出警告。也是比较有用的选项。
+CXXFLAGS += -Wunreachable-code
+# 无论是声明为 inline 或者是指定了-finline-functions 选项，如果某函数不能内联，编译器都将发出警告。如果你的代码含有很多 inline 函数的话，这是很有用的选项。
+# CXXFLAGS += -Winline
 # -Wno-deprecated 使用过时的特性时不要给出警告。
 # CXXFLAGS += -Wno-deprecated
 # -Werror时所有的警告都变成错误,使出现警告时也停止编译.需要和指定警告的参数一起使用.
@@ -159,13 +171,11 @@ $(OUTPUT_OBJDIR):
 	@mkdir -p $(OUTPUT_OBJDIR)
 
 # /home/coder/GameServer/engine/objs/Debug/loginserver/main.o:/home/coder/GameServer/engine/src/server/loginserver/tt/pp.h
-$(OUTPUT_OBJDIR)/%.o: %.cpp
-	@echo $+
+$(OUTPUT_OBJDIR)/%.o: $(CURDIR)/%.cpp
 	$(COMPILE.cpp) $< $(OUTPUT_OPTION)
 	
 ifdef BIN
 $(OUTPUT_FILE):: $(OUTPUT_OBJS) $(MY_LIBNAMES)
-	@echo $^
 	$(LINK.cpp) -o $@ $(OUTPUT_OBJS) $(LDLIBS) 
 endif
 

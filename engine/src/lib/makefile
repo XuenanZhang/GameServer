@@ -5,7 +5,8 @@ endif
 all clean :
 	@echo "lib"
 	@$(MAKE) -C common $@
-	# @$(MAKE) -C thread $@
+	@$(MAKE) -C thread $@
+	# @$(MAKE) -C log $@
 	# @$(MAKE) -C network $@
 
 
