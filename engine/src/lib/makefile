@@ -3,10 +3,9 @@ export GAME_ROOT := $(subst /src/lib,,$(CURDIR))
 endif
 
 all clean :
-	@echo "lib"
 	@$(MAKE) -C common $@
 	@$(MAKE) -C thread $@
-	# @$(MAKE) -C log $@
-	# @$(MAKE) -C network $@
+	@$(MAKE) -C log $@
+	@# @$(MAKE) -C network $@
 
 

@@ -1,5 +1,8 @@
 BIN = loginserver
 
+MY_LIBS = log
+
+
 
 ifndef GAME_ROOT
 export GAME_ROOT := $(subst /src/server/$(BIN),,$(CURDIR))

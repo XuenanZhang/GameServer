@@ -13,18 +13,18 @@
 #define _BLING_DATE_H_
 
 #include "common/copyable.h"
+#include "common/Timestamp.h"
 
 #include <time.h>
 
 namespace bling
 {
-
 class Date : public bling::copyable
 {
 public:
     Date();
     // UTC 秒
-    explicit Date(int secondsArg);
+    explicit Date(int secondsUtc);
 
 public:
     int year()     { return _tm.tm_year + 1900; }
@@ -35,6 +35,11 @@ public:
     int seconds()  { return _tm.tm_sec; };
     int week()     { return _tm.tm_wday ? _tm.tm_wday : 7; };
     int totalDay() { return _tm.tm_yday; };
+
+    //更新为当前时间
+    void now();
+    //获得当天0点时间
+    Timestamp getZero();
 
 private:
     time_t _seconds;

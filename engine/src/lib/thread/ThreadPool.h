@@ -21,6 +21,7 @@
 #include <functional>
 #include <vector>
 #include <queue>
+#include <memory>
 
 namespace bling
 {
@@ -58,7 +59,7 @@ private:
     Condition _notFull;
     string _name;
     Task _threadInitCallback;
-    std::vector<bling::Thread*> _threads;
+    std::vector<std::unique_ptr<bling::Thread>> _threads;
     std::vector<int> _threadss;
     std::deque<Task> _queue;
     bool _running;

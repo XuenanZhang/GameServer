@@ -56,7 +56,10 @@ public:
     }
     const Timestamp & operator- (const Timestamp &rt)
     {
-        _microSeconds -= rt._microSeconds;
+        if (_microSeconds < rt._microSeconds)
+            _microSeconds = 0;
+        else
+            _microSeconds -= rt._microSeconds;
         return *this;
     }
     bool operator > (const Timestamp &rt) const

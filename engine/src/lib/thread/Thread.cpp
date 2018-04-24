@@ -120,7 +120,7 @@ Thread::~Thread()
         pthread_detach(_pthreadId);
     }
 
-    LOG_INFO << "thread distory";
+    // LOG_INFO << "thread distory";
 }
 
 void Thread::start()
@@ -133,7 +133,7 @@ void Thread::start()
     {
         _started = false;
         delete data;
-        LOG_SYSFATAL << "Failed in pthread_create";
+        // LOG_SYSFATAL << "Failed in pthread_create";
     }
     else
     {

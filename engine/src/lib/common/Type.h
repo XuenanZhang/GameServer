@@ -73,7 +73,7 @@ using std::string;
 // #define STRING_NOCASE_EQUAL(str1, str2) (CharUtils::strcmpnA(str1, str2) == 0)
 
 //
-#define BLING_ASSERT(exp) assert(exp);
+#define BLING_ASSERT(exp) assert(exp)
 
 //判断某位是否被置
 //15.14....3.2.1.0 

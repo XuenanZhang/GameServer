@@ -80,8 +80,6 @@ flags = [
 './lib/log',
 '-I',
 './server/loginserver',
-'-I',
-'./server/loginserver/tt',
 ]
 
 # Clang automatically sets the '-std=' flag to 'c++14' for MSVC 2015 or later,

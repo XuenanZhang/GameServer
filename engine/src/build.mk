@@ -114,9 +114,10 @@ LINK.cpp = $(CXX) $(CXXFLAGS) $(LDFLAGS)
 #########################
 # 处理目标文件
 #########################
-.PHONY : all done clean info always
+.PHONY : info all done clean info always
 
-all: info $(OUTPUT_DIR) $(OUTPUT_OBJDIR) $(OUTPUT_FILE) done
+# all: info $(OUTPUT_DIR) $(OUTPUT_OBJDIR) $(OUTPUT_FILE) done
+all: $(OUTPUT_DIR) $(OUTPUT_OBJDIR) $(OUTPUT_FILE) done
 
 info:
 	@echo VPATH = $(VPATH)
@@ -135,9 +136,9 @@ done:
 	@echo "------------------------------------------------------------------------"
 	@echo "done ===> $(OUTPUT_FILE)"
 	@echo "------------------------------------------------------------------------"
-# ifeq (0, $(MAKELEVEL))
-	# @echo -n 
-# endif
+ifeq (0, $(MAKELEVEL))
+
+endif
 
 clean:
 	@rm -rf $(OUTPUT_OBJDIR) $(OUTPUT_FILE)
