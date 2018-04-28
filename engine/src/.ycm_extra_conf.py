@@ -75,7 +75,7 @@ flags = [
 '-I',
 './lib/thread',
 '-I',
-'./lib/network',
+'./lib/net',
 '-I',
 './lib/log',
 '-I',

@@ -6,6 +6,6 @@ all clean :
 	@$(MAKE) -C common $@
 	@$(MAKE) -C thread $@
 	@$(MAKE) -C log $@
-	@# @$(MAKE) -C network $@
+	@$(MAKE) -C net $@
 
 

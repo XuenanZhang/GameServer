@@ -1,6 +1,6 @@
 BIN = loginserver
 
-MY_LIBS = log
+MY_LIBS = log net
 
 
 

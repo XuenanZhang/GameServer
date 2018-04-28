@@ -15,6 +15,7 @@
 #include "log/LogFile.h"
 #include "common/ProcessInfo.h"
 #include "log/AsyncLogger.h"
+#include "net/Buffer.h"
 
 using namespace bling;
 
@@ -184,6 +185,7 @@ void testProcess()
 
 int main()
 {
+    net::Buffer buffer;
     // std::vector<std::unique_ptr<Test>> vec;
     // vec.reserve(16);
     // std::unique_ptr<Test> a(new Test);
