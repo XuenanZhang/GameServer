@@ -1,14 +1,3 @@
-/**********************************************************
- * Author        : zxn
- * Email         : 176108053@qq.com
- * GitHub        : https://github.com/XuenanZhang
-
- * Create time   : 2018-04-28 18:01
- * Last modified : 2018-04-28 18:01
- * Filename      : Buffer.h
-
- * Description   : 网络buff缓冲
- * *******************************************************/
 #ifndef _BLING_BUFFER_H_
 #define _BLING_BUFFER_H_
 
