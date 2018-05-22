@@ -17,7 +17,7 @@ string Timestamp::toString()
     char buf[32] = {0};
     int64_t seconds = _microSeconds / kMicroSecondPerSecond;
     int64_t microSeconds = _microSeconds % kMicroSecondPerSecond;
-    snprintf(buf, sizeof(buf) - 1, "%" PRId64 ".06%" PRId64 "", seconds, microSeconds);
+    snprintf(buf, sizeof(buf) - 1, "%" PRId64 ".%" PRId64 "", seconds, microSeconds);
 
     return buf;
 }

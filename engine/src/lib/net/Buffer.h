@@ -1,3 +1,14 @@
+/**********************************************************
+ * Author        : zxn
+ * Email         : 176108053@qq.com
+ * GitHub        : https://github.com/XuenanZhang
+
+ * Create time   : 2018-04-27 10:12
+ * Last modified : 2018-04-27 15:29
+ * Filename      : Buffer.h
+
+ * Description   : 动态增长buff
+ * *******************************************************/
 #ifndef _BLING_BUFFER_H_
 #define _BLING_BUFFER_H_
 

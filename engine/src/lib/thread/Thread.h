@@ -44,7 +44,7 @@ public:
 
     const string& name() const { return _name; }
 
-    static int numCreated() { return _numCreated.load(); }
+    static int numCreated() { return _s_numCreated.load(); }
 
 private:
     void setDefaultName();
@@ -59,7 +59,7 @@ private:
     string         _name;
     CountDownLatch _latch;
 
-    static std::atomic<int32_t> _numCreated;
+    static std::atomic<int32_t> _s_numCreated;
 };
 
 }; //bling

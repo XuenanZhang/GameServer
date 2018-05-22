@@ -1,3 +1,14 @@
+/**********************************************************
+ * Author        : zxn
+ * Email         : 176108053@qq.com
+ * GitHub        : https://github.com/XuenanZhang
+
+ * Create time   : 2018-04-27 14:54
+ * Last modified : 2018-04-27 14:54
+ * Filename      : Socket.h
+
+ * Description   : socket封装类
+ * *******************************************************/
 #ifndef _BLING_SOCKET_H_
 #define _BLING_SOCKET_H_
 
@@ -40,7 +51,7 @@ public:
     void setTcpNoDelay(bool on);
 
     /**
-     * SOL_SOCKET级别，处于TIME_WAIT状态下的socket可以重复绑定使用(防止重启方无法bind)
+     * SOL_SOCKET级别，设置接受发送缓冲区大小
      */
     void setRevAndSendBuf(int size);
 

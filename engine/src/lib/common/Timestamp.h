@@ -111,7 +111,7 @@ inline double timeDiff(Timestamp& hight, Timestamp& low)
     return static_cast<double>(diff) / Timestamp::kMicroSecondPerSecond;
 }
 
-inline Timestamp addTime(Timestamp& timestamp, double seconds)
+inline Timestamp addTime(Timestamp timestamp, double seconds)
 {
     int64_t delta = static_cast<int64_t>(seconds * Timestamp::kMicroSecondPerSecond);
     return Timestamp(timestamp.getMircoSeconds() + delta);

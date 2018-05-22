@@ -106,7 +106,7 @@ void CurrentThread::sleepUsec(int64_t usec)
     ::nanosleep(&ts, NULL);
 }
 
-std::atomic<int32_t> Thread::_numCreated(0);
+std::atomic<int32_t> Thread::_s_numCreated(0);
 Thread::Thread(const ThreadFunc& func, const string& nameArg)
         : _started(false), _joined(false), _pthreadId(0), _tid(0), _func(func), _name(nameArg), _latch(1)
 {
@@ -152,7 +152,7 @@ int Thread::join()
 
 void Thread::setDefaultName()
 {
-    int num = _numCreated++;
+    int num = _s_numCreated++;
     if (_name.empty())
     {
         char buf[32];

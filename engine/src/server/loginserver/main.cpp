@@ -16,9 +16,13 @@
 #include "common/ProcessInfo.h"
 #include "log/AsyncLogger.h"
 #include "net/Buffer.h"
+#include "net/EventLoop.h"
+#include "net/TimerId.h"
+#include "net/EventLoopThreadPool.h"
 
 using namespace bling;
-
+using namespace bling::net;
+/**
 MutexLock mutex;
 int num = 0;
 void threadFun()
@@ -183,9 +187,163 @@ void testProcess()
     
 }
 
+EventLoop* g_loop = NULL;
+TimerId* g_timeId = NULL;
+void loopPrint(string s)
+{
+    LOG_DEBUG << "key = " << s;
+    // LOG_DEBUG << "tid = " << CurrentThread::tid();
+    // LOG_DEBUG << "now = " << Timestamp::now().toString();
+}
+void exitLoop(string s)
+{
+    loopPrint(s);
+    g_loop->quit();
+    LOG_DEBUG << "exit loop";
+}
+void cancelLoop(string s)
+{
+   loopPrint(s);
+   g_loop->cancel(*g_timeId);
+}
+void testTimeQueue()
+{
+    LOG_DEBUG << "curr thredId = " << CurrentThread::tid() << " time = " << Timestamp::now().toString();
+    EventLoop loop; 
+    g_loop = &loop;
+    
+
+    // Timestamp timestamp = addTime(Timestamp::now() , 1);
+    // loop.runAt(timestamp, std::bind(loopPrint, "runAt now + 1s"));
+
+    // loop.runAfter(1.3 , std::bind(loopPrint, "runAfter 1.3s"));
+    // loop.runAfter(2.5 , std::bind(loopPrint, "runAfter 2.5s"));
+    // TimerId t4 = loop.runAfter(4 , std::bind(loopPrint, "runAfter 4s"));
+    // g_timeId = &t4;
+    // loop.runAfter(3 , std::bind(cancelLoop, "runAfter 3s canel"));
+
+    loop.runEvery(1, std::bind(loopPrint, "runEvery 1s"));
+
+    loop.runAfter(10, std::bind(exitLoop, "runAfter 10s exit"));
+    loop.loop();
+}
+**/
+
+class TA;
+std::shared_ptr<TA> up;
+class TA 
+{
+public:
+    TA() { param = 1; str = "sss";printf("TA construction\n"); };
+   virtual  ~TA() { printf("TA destory\n"); };
+
+   // TA( TA&& a) noexcept 
+   // {
+        // param = a.param;
+        // str = std::move(a.str);
+        // printf("TA copy &&  \n");
+   // }
+
+   // TA& operator = (TA&& a) noexcept 
+   // {
+        // param = a.param;
+        // str = a.str;
+        // printf("TA operator =  &&  \n");
+        // return *this;
+   // }
+
+   void show()
+   {
+        int i = up.use_count();
+        printf("TA show%d \n", i);
+   }
+
+   int param;
+   string str;
+}; // class TA
+
+class TB 
+{
+public:
+    TB() { printf("TB construction\n"); };
+    ~TB() { printf("TB destory\n"); };
+}; // class TA
+class TC : public TB
+{
+public:
+    TC() { printf("TC construction\n"); };
+    ~TC() { printf("TC destory\n"); };
+}; // class TA
+
+void ff(TA&& a)
+{
+   a.str = "zvbd"; 
+}
+std::unique_ptr<TA> bb;
+void fff(std::unique_ptr<TA> pp)
+{
+    TA* a = pp.get();
+    pp->str = "000000";
+    a->param = 99;
+    bb = std::move(pp);
+}
+void aff(const std::function<void()>& cb)
+{
+    cb(); 
+}
+
+std::vector<TB> bff()
+{
+    std::vector<TB> vec;
+    TB a;
+    vec.push_back(a);
+    // TB b;
+    // vec.push_back(b);
+    printf("111aaaa\n");
+    return vec;
+}
+
+void init()
+{
+    LOG_INFO << "init";
+    CountDownLatch cd(1);
+}
+
 int main()
 {
-    net::Buffer buffer;
+    init();
+    EventLoop loop;
+    EventLoopThreadPool pool(&loop, "zxn");
+    std::vector<TB> vec(bff());
+    printf("aaaa\n");
+    
+    // up.reset(new TA());
+    // std::shared_ptr<TA> up(new TA());
+    // int i = up.use_count();
+    // {
+        // aff(std::bind(&TA::show, up));
+        // std::function<void()> f = std::bind(&TA::show, up);
+        // aff(f);
+        // i = up.use_count();
+        // f();
+        // up.get();
+        // i = up.use_count();
+        // std::vector<std::function<void()>> vec;
+        // i = up.use_count();
+        // vec.clear();
+        // i = up.use_count();
+        // i = up.use_count();
+        // i = up.use_count();
+    // }
+    // i = up.use_count();
+    // fff(std::move(up));
+   // testTimeQueue();
+    // {
+        // TC* b = new TC();
+        // TA* a = reinterpret_cast<TA*>(b);
+        // delete a;
+    // }
+    // // net::Buffer buffer;
     // std::vector<std::unique_ptr<Test>> vec;
     // vec.reserve(16);
     // std::unique_ptr<Test> a(new Test);
@@ -200,9 +358,9 @@ int main()
     // b = std::move(vec[vec.size() - 1]);
     // b.reset(vec[0].release());
     // vec.resize(0);
-    printf("aaaaa");
+    printf("end....\n");
     
-    testAsynLog();
+    // testAsynLog();
     // testLogFile();
     // testProcess();
     // bling::Logger::setOutput(logOutput);
