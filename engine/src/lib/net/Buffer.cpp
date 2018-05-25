@@ -54,7 +54,7 @@ string Buffer::retrieveAsString(size_t len)
     BLING_ASSERT(len <= readableBytes());
     string result(peek(), len);
     retrieve(len);
-    return std::move(result);
+    return result;
 }
 
 void Buffer::append(const char* data, size_t len)

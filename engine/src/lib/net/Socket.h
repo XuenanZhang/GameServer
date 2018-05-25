@@ -15,6 +15,7 @@
 #include "common/noncopyable.h"
 
 struct tcp_info;
+
 namespace bling
 {
 

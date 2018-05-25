@@ -11,7 +11,7 @@
 using namespace bling;
 using namespace net;
 
-void setNonBlockAndCloseOnexec(int sockfd)
+void setNonBlockAndCloseOnExec(int sockfd)
 {
     //non-block
     int flags = ::fcntl(sockfd, F_GETFL, 0);
@@ -32,7 +32,7 @@ int sockets::createNonblocking(sa_family_t family)
     int sockfd = ::socket(family, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
     if (sockfd < 0)
     {
-        LOG_SYSFATAL << "socket::createNonblocking fail";
+        LOG_SYSFATAL << NET_LOG_SIGN << "socket::createNonblocking fail";
     }
 
     return sockfd;
@@ -49,7 +49,7 @@ void sockets::bind(int sockfd, const struct sockaddr* addr)
     int ret = ::bind(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in6)));
     if (ret < 0)
     {
-        LOG_SYSFATAL << "socket bind fail";
+        LOG_SYSFATAL << NET_LOG_SIGN << "socket bind fail";
     }
 }
 
@@ -58,7 +58,7 @@ void sockets::listen(int sockfd)
     int ret = ::listen(sockfd, SOMAXCONN);
     if (ret < 0)
     {
-        LOG_SYSFATAL << "listen fail";
+        LOG_SYSFATAL << NET_LOG_SIGN << "listen fail";
     }
 }
 
@@ -70,7 +70,7 @@ int sockets::accept(int sockfd, struct sockaddr_in6* addr)
     if (connfd < 0)
     {
         int savedError = errno;
-        LOG_SYSERR << "socket accept fail";
+        LOG_SYSERR << NET_LOG_SIGN << "socket accept fail";
 
         switch (savedError)
         {
@@ -90,10 +90,10 @@ int sockets::accept(int sockfd, struct sockaddr_in6* addr)
             case ENOMEM:
             case ENOTSOCK:
             case EOPNOTSUPP:
-                LOG_FATAL << "unexpected error of ::accept" << savedError;
+                LOG_FATAL << NET_LOG_SIGN << "unexpected error of ::accept" << savedError;
                 break;
             default:
-                LOG_FATAL << "unknow error of ::accept" << savedError;
+                LOG_FATAL << NET_LOG_SIGN << "unknow error of ::accept" << savedError;
                 break;
         }
     }
@@ -121,7 +121,7 @@ void sockets::close(int sockfd)
 {
     if (::close(sockfd) < 0)
     {
-        LOG_SYSERR << "sockets::close";
+        LOG_SYSERR << NET_LOG_SIGN << "sockets::close";
     } 
 }
 
@@ -129,7 +129,7 @@ void sockets::shutdownWrite(int sockfd)
 {
     if (::shutdown(sockfd, SHUT_WR) < 0)
     {
-        LOG_SYSERR << "sockets::shutdownWrite";
+        LOG_SYSERR << NET_LOG_SIGN << "sockets::shutdownWrite";
     }    
 }
 
@@ -165,7 +165,7 @@ void sockets::fromIpPort(const char* ip, uint16_t port, struct sockaddr_in* addr
     addr->sin_port = hostToNet16(port);
     if (::inet_pton(AF_INET, ip, &addr->sin_addr) <= 0)
     {
-        LOG_SYSERR << "sockets::fromIpPort  inet_pton";
+        LOG_SYSERR << NET_LOG_SIGN << "sockets::fromIpPort  inet_pton";
     }
 }
 
@@ -175,7 +175,7 @@ void sockets::fromIpPort(const char* ip, uint16_t port, struct sockaddr_in6* add
     addr->sin6_port = hostToNet16(port);
     if (::inet_pton(AF_INET6, ip, &addr->sin6_addr) <= 0)
     {
-        LOG_SYSERR << "sockets::fromIpPort  inet_pton";
+        LOG_SYSERR << NET_LOG_SIGN << "sockets::fromIpPort  inet_pton";
     }
 }
 
@@ -227,7 +227,7 @@ struct sockaddr_in6 sockets::getLocalAddr(int sockfd)
     socklen_t addrlen = static_cast<socklen_t>(sizeof localaddr);
     if (::getsockname(sockfd, sockaddr_cast(&localaddr), &addrlen) < 0)
     {
-        LOG_SYSERR << "sockets::getLocalAddr";
+        LOG_SYSERR << NET_LOG_SIGN << "sockets::getLocalAddr";
     }
 
     return localaddr;
@@ -240,7 +240,7 @@ struct sockaddr_in6 sockets::getPeerAddr(int sockfd)
     socklen_t addrlen = static_cast<socklen_t>(sizeof peeraddr);
     if (::getpeername(sockfd, sockaddr_cast(&peeraddr), &addrlen) < 0)
     {
-        LOG_SYSERR << "sockets::getPeerAddr";
+        LOG_SYSERR << NET_LOG_SIGN << "sockets::getPeerAddr";
     }
 
     return peeraddr;

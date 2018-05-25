@@ -120,6 +120,8 @@ extern Logger::LogLevel g_logLevel;
 #define LOG_SYSFATAL bling::Logger(__FILE__, __LINE__, true).stream()
 
 
+#define NET_LOG_SIGN "net --> "
+#define DB_LOG_SIGN "db --> "
 
 
 

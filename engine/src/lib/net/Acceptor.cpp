@@ -49,7 +49,9 @@ void Acceptor::handleRead()
     {
         if (_newConnectionCallback)
         {
+            // std::unique_ptr<Socket> ptr(new Socket(connfd));
             _newConnectionCallback(std::unique_ptr<Socket>(new Socket(connfd)), peerAddr);
+            // _newConnectionCallback(ptr, peerAddr);
         }
         else
         {
@@ -58,7 +60,7 @@ void Acceptor::handleRead()
     }
     else
     {
-        LOG_SYSERR << "in Acceptor::handleRead";
+        LOG_SYSERR << NET_LOG_SIGN << "in Acceptor::handleRead";
 
         if (errno == EMFILE)
         {

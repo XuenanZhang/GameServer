@@ -19,6 +19,10 @@
 #include "net/EventLoop.h"
 #include "net/TimerId.h"
 #include "net/EventLoopThreadPool.h"
+#include "net/TcpConnection.h"
+#include "net/Acceptor.h"
+#include "net/TcpServer.h"
+#include "net/SocketAPI.h"
 
 using namespace bling;
 using namespace bling::net;
@@ -201,16 +205,24 @@ void exitLoop(string s)
     g_loop->quit();
     LOG_DEBUG << "exit loop";
 }
-void cancelLoop(string s)
+**/
+void cancelLoop(string& s)
 {
-   loopPrint(s);
-   g_loop->cancel(*g_timeId);
+    LOG_INFO << "s ====== " << s;
+   // loopPrint(s);
+   // g_loop->cancel(*g_timeId);
 }
 void testTimeQueue()
 {
     LOG_DEBUG << "curr thredId = " << CurrentThread::tid() << " time = " << Timestamp::now().toString();
     EventLoop loop; 
-    g_loop = &loop;
+    // g_loop = &loop;
+    {
+        string s;
+        s += "asdf";
+        s += "zzz";
+        loop.runAfter(1 , std::bind(cancelLoop, s));
+    }
     
 
     // Timestamp timestamp = addTime(Timestamp::now() , 1);
@@ -222,19 +234,19 @@ void testTimeQueue()
     // g_timeId = &t4;
     // loop.runAfter(3 , std::bind(cancelLoop, "runAfter 3s canel"));
 
-    loop.runEvery(1, std::bind(loopPrint, "runEvery 1s"));
+    // loop.runEvery(1, std::bind(loopPrint, "runEvery 1s"));
 
-    loop.runAfter(10, std::bind(exitLoop, "runAfter 10s exit"));
+    // loop.runAfter(10, std::bind(exitLoop, "runAfter 10s exit"));
     loop.loop();
 }
-**/
 
 class TA;
 std::shared_ptr<TA> up;
-class TA 
+class TA
 {
 public:
     TA() { param = 1; str = "sss";printf("TA construction\n"); };
+    TA(int params, string strs) : param(params), str(strs) {};
    virtual  ~TA() { printf("TA destory\n"); };
 
    // TA( TA&& a) noexcept 
@@ -257,6 +269,11 @@ public:
         int i = up.use_count();
         printf("TA show%d \n", i);
    }
+
+   // std::shared_ptr<TA> getPtr()
+   // {
+        // return shared_from_this();
+   // }
 
    int param;
    string str;
@@ -303,19 +320,49 @@ std::vector<TB> bff()
     return vec;
 }
 
+void uaa(std::unique_ptr<TA> ptr)
+{
+   printf("ptr == %d  %s\n", ptr->param, ptr->str.c_str()); 
+}
+
+void testTcpServer()
+{
+    EventLoop loop;
+    InetAddress listenAddr(2000, false, true);
+    TcpServer server(&loop, listenAddr, "zxn");
+    server.setThreadNum(3);
+    server.start();
+    loop.loop();
+}
+
 void init()
 {
     LOG_INFO << "init";
     CountDownLatch cd(1);
+    sockets::createNonblocking(AF_INET6);
+    Socket s(999);
 }
 
 int main()
 {
     init();
-    EventLoop loop;
-    EventLoopThreadPool pool(&loop, "zxn");
-    std::vector<TB> vec(bff());
-    printf("aaaa\n");
+    testTcpServer();
+    // TA ta;
+    // ta.param = 99;
+    uaa(std::unique_ptr<TA>(new TA(100, "new")));
+    
+
+    // testTimeQueue();
+    // EventLoop loop;
+    // EventLoopThreadPool pool(&loop, "zxn");
+    // std::vector<TB> vec(bff());
+    // printf("aaaa\n");
+    // std::shared_ptr<TA> a = std::make_shared<TA>();
+    // printf("a=%d\n", a.use_count());
+    // std::shared_ptr<TA> aa = a->getPtr();
+    // printf("a=%d\n", a.use_count());
+    // printf("aa=%d\n", aa.use_count());
+    
     
     // up.reset(new TA());
     // std::shared_ptr<TA> up(new TA());

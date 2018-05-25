@@ -73,7 +73,7 @@ void Channel::handleEvent(Timestamp receiveTime)
 void Channel::handleEventWithGuard(Timestamp receiveTime)
 {
    _eventHandling = true; 
-   LOG_TRACE << reventsToString();
+   LOG_TRACE << NET_LOG_SIGN << reventsToString();
    if ((_revents & EPOLLHUP) && !(_revents & EPOLLIN))
    {
         if (_closeCallback) _closeCallback(); 

@@ -21,7 +21,7 @@ EpollPoller::EpollPoller(EventLoop* loop)
 {
     if (_epollfd < 0)
     {
-        LOG_SYSFATAL << "epoll_create1 failed";
+        LOG_SYSFATAL << NET_LOG_SIGN << "epoll_create1 failed";
     }
 }
 
@@ -32,7 +32,7 @@ EpollPoller::~EpollPoller()
 
 Timestamp EpollPoller::poll(int timeoutMs, ChannelVector* activeChannels)
 {
-    LOG_TRACE << "fd total count " << _channels.size();
+    LOG_TRACE << NET_LOG_SIGN << "fd total count " << _channels.size();
 
     int numEvents = ::epoll_wait(_epollfd, &*_events.begin(), static_cast<int>(_events.size()), timeoutMs);
 
@@ -40,7 +40,7 @@ Timestamp EpollPoller::poll(int timeoutMs, ChannelVector* activeChannels)
     Timestamp now(Timestamp::now());
     if (numEvents > 0)
     {
-        LOG_TRACE << numEvents << " events happened";
+        LOG_TRACE << NET_LOG_SIGN << numEvents << " events happened";
         fillActiveChannels(numEvents, activeChannels);
         if (static_cast<size_t>(numEvents) == _events.size())
         {
@@ -49,14 +49,14 @@ Timestamp EpollPoller::poll(int timeoutMs, ChannelVector* activeChannels)
     }
     else if (numEvents == 0)
     {
-        LOG_TRACE << "nothing happened";
+        LOG_TRACE << NET_LOG_SIGN << "nothing happened";
     }
     else 
     {
         if (savedErrno != EINTR)
         {
             errno = savedErrno;
-            LOG_SYSERR << "EpollPoller::poll()";
+            LOG_SYSERR << NET_LOG_SIGN << "EpollPoller::poll()";
         }
     }
 
@@ -83,7 +83,7 @@ void EpollPoller::updateChannel(Channel* channel)
 {
     Poller::assertInLoopThread();
     const int index = channel->index();
-    LOG_TRACE << "fd = " << channel->fd() << " events = " << channel->events() << " index = " << index;
+    LOG_TRACE << NET_LOG_SIGN << "fd = " << channel->fd() << " events = " << channel->events() << " index = " << index;
 
     int fd = channel->fd();
     if (index == kNew || index == kDeleted)
@@ -123,7 +123,7 @@ void EpollPoller::removeChannel(Channel* channel)
 {
     Poller::assertInLoopThread();
     int fd = channel->fd();
-    LOG_TRACE << "fd = " << fd;
+    LOG_TRACE << NET_LOG_SIGN << "fd = " << fd;
     BLING_ASSERT(_channels.find(fd) != _channels.end());
     BLING_ASSERT(_channels[fd] == channel);
     BLING_ASSERT(channel->isNoneEvent());
@@ -148,16 +148,16 @@ void EpollPoller::update(int operation, Channel* channel)
     event.events = channel->events();
     event.data.ptr = channel;
     int fd = channel->fd();
-    LOG_TRACE << "epoll_ctl op = " << operationToString(operation) << " fd = " << fd << " event = { " << channel->eventsToString() << " }";
+    LOG_TRACE << NET_LOG_SIGN << "epoll_ctl op = " << operationToString(operation) << " fd = " << fd << " event = { " << channel->eventsToString() << " }";
     if (::epoll_ctl(_epollfd, operation, fd, &event) < 0)
     {
         if (operation == EPOLL_CTL_DEL)
         {
-            LOG_SYSERR << "epoll_ctl op =" << operationToString(operation) << " fd =" << fd;
+            LOG_SYSERR << NET_LOG_SIGN << "epoll_ctl op =" << operationToString(operation) << " fd =" << fd;
         }
         else 
         {
-            LOG_SYSFATAL << "epoll_ctl op =" << operationToString(operation) << " fd =" << fd;
+            LOG_SYSFATAL << NET_LOG_SIGN << "epoll_ctl op =" << operationToString(operation) << " fd =" << fd;
         }
     }
 }
