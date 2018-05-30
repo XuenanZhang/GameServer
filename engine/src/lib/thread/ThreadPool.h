@@ -38,6 +38,7 @@ public:
     //设置以后需要创建线程池的线程调用 run
     void setMaxQueueSize(int maxSize) { _maxQueueSize = maxSize; }
 
+    //每个线程初始化完成都会调用
     void setThreadInitCallback(const Task& cb) { _threadInitCallback = cb; }
 
     void start(int32_t numThreads);

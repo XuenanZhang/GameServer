@@ -49,9 +49,10 @@ public:
     EventLoop* getLoop() const { return _loop; }
 
     void setThreadNum(int numThreads);
-    void setThreadInitCallback(const ThreadInitCallback& cb) { _threadInitCallback = cb; }
+    void setThreadInitCallback(const ThreadInitCallback& cb) { _threadInitCallback = cb; } //not thread safe
     std::shared_ptr<EventLoopThreadPool> threadPool() { return _threadPool;}
 
+    /** 启动服务器 **/
     void start();
 
     /** 新连接 或 断开连接 回调 not thread safe **/

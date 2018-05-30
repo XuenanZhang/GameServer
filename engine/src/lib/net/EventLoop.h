@@ -51,7 +51,8 @@ public:
     /** 总共wait次数 **/
     int64_t iteration() const { return _iteration; }
 
-    void runInLoop(const Functor& cb);// safe
+    /** 在事件循环线程中运行 **/
+    void runInLoop(const Functor& cb);// thread safe
 
     /** 在此线程运行回调函数 **/
     void queueInLoop(const Functor& cb);
@@ -67,7 +68,10 @@ public:
 
     void cancel(TimerId timerId);
 
+    /** 唤醒线程 **/
     void wakeup();
+
+    /** Poller **/
     void updateChannel(Channel* channel);
     void removeChannel(Channel* channel);
     bool hasChannel(Channel* channel);
@@ -93,6 +97,7 @@ private:
 
     void handleRead();
 
+    /** 运行未决状态函数 **/
     void doPendingFunctors();
 
     void printActiveChannels() const;

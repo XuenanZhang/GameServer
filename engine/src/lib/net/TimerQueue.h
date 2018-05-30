@@ -42,8 +42,8 @@ public:
 private:
     typedef std::pair<Timestamp, Timer*> Entry;
     typedef std::set<Entry> TimerSet;
-    // typedef std::pair<Timer*, int64_t> ActiveTimer;
-    // typedef std::set<ActiveTimer> ActiveTimerSet;
+    typedef std::pair<Timer*, int64_t> ActiveTimer;
+    typedef std::set<ActiveTimer> ActiveTimerSet;
 
     void addTimerInLoop(Timer* timer);
     void cancelInLoop(TimerId timerId);
@@ -63,11 +63,10 @@ private:
     Channel _timerfdChannel;
     TimerSet _timers;
 
-    // ActiveTimerSet _activeTimers;
-
-    // ActiveTimerSet _cancelingTimers;
+    ActiveTimerSet _activeTimers;
+    ActiveTimerSet _cancelingTimers;
     bool _callingExpiredTimers;
-    std::set<Timer*> _cancelingTimers;
+    // std::set<Timer*> _cancelingTimers;
 
 }; // class TimerQueue : bling::noncopyable
 

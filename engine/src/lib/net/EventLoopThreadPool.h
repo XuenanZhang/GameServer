@@ -37,6 +37,8 @@ public:
     ~EventLoopThreadPool();
 
     void setThreadNum(int numThreads) { _numThreads = numThreads; }
+
+    /** 启动线程池，每个EventLoopThread中的EventLoop初始化完成都会调用ThreadInitCallback, 最后一次调用参数baseLoop **/
     void start(const ThreadInitCallback& cb = ThreadInitCallback());
 
     EventLoop* getNextLoop();

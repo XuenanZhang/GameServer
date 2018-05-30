@@ -7,10 +7,14 @@
 using namespace bling;
 using namespace bling::net;
 
+// EPOLL_CTL_ADD：      注册新的fd到epfd中；
+// EPOLL_CTL_MOD：      修改已经注册的fd的监听事件；
+// EPOLL_CTL_DEL：      从epfd中删除一个fd；
+
 namespace
 {
-const int kNew = -1;    //不在_channels中并且不在poller事件中
-const int kAdded = 1;   //已在_channels中并且已在poller事件中
+const int kNew     = -1;    //不在_channels中并且不在poller事件中
+const int kAdded   = 1;   //已在_channels中并且已在poller事件中
 const int kDeleted = 2; //已在_channels中并且不在poller事件中
 }
 

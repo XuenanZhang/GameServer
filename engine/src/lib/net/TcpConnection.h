@@ -7,7 +7,8 @@
  * Last modified : 2018-05-25 11:17
  * Filename      : TcpConnection.h
 
- * Description   : 每个已连接的socket对应一个此类封装
+ * Description   : 当一个新的连接建立后封装为此类, 每个TcpConnect只会在一个EventLoop中
+                   管理socket和Channel生命周期。
  * *******************************************************/
 #ifndef _BLING_TCPCONNECTION_H_
 #define _BLING_TCPCONNECTION_H_
@@ -43,10 +44,13 @@ public:
 
     EventLoop* getLoop() const { return _loop; }
     const string& name() const { return _name; }
+
     const InetAddress& localAddress() const { return _localAddr; }
     const InetAddress& peerAddress() const { return _peerAddr; }
+
     bool connected() const { return _state == kConnected; }
     bool disconnected() const { return _state == kDisconnected; }
+
     bool getTcpInfo(struct tcp_info*) const;
     string getTcpInfoString() const;
 
@@ -76,9 +80,9 @@ public:
     Buffer* inputBuffer() { return &_inputBuffer; }
     Buffer* outputBuffer() { return &_outputBuffer; }
 
-    /** 当TcpServer接受新连接时调用 **/
+    /** 当在TcpServer接受新连接创建好TcpConnect后调用 **/
     void connectEstablished();
-    /** 当TcpServer移除连接时调用 **/
+    /** 当已经从TcpServer中移除后调用 **/
     void connectDestroyed();
 
 private:
@@ -106,18 +110,23 @@ private:
     StateConnect _state;
     bool _reading;
 
+    /** 管理socket和Channel生命周期 **/
     std::unique_ptr<Socket> _socket;
     std::unique_ptr<Channel> _channel;
+
     const InetAddress _localAddr;
     const InetAddress _peerAddr;
+
     ConnectionCallback _connectionCallback;
     MessageCallback _messageCallback;
     WriteCompleteCallback _writeCompleteCallback;
     CloseCallback _closeCallback;
     HightWaterMarkCallback _hightWaterMarkCallback;
     size_t _hightWaterMark;
+
     Buffer _inputBuffer;
     Buffer _outputBuffer;
+
     void* _context;
 
 }; // class TcpConnection

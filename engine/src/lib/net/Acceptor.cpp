@@ -45,7 +45,7 @@ void Acceptor::handleRead()
     _loop->assertInLoopThread();
     InetAddress peerAddr;
     int connfd = _acceptSocket.accpet(&peerAddr);
-    if (connfd > 0)
+    if (connfd >= 0)
     {
         if (_newConnectionCallback)
         {
@@ -62,7 +62,7 @@ void Acceptor::handleRead()
     {
         LOG_SYSERR << NET_LOG_SIGN << "in Acceptor::handleRead";
 
-        if (errno == EMFILE)
+        if (errno == EMFILE) //进程文件描述耗尽
         {
             ::close(_idleFd);
             _idleFd = ::accept(_acceptSocket.fd(), NULL, NULL);

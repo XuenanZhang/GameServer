@@ -28,7 +28,7 @@ TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenAddr, const strin
 TcpServer::~TcpServer()
 {
     _loop->assertInLoopThread();
-    LOG_TRACE << "TcpServer::~TcpServer [" << _name << "] destructing";
+    LOG_TRACE << NET_LOG_SIGN << "TcpServer::~TcpServer [" << _name << "] destructing";
 
     for (ConnectionMap::iterator it = _connections.begin(); it != _connections.end(); ++it)
     {
@@ -65,7 +65,7 @@ void TcpServer::newConnection(std::unique_ptr<Socket> socket, const InetAddress&
     string connName = _name + buf;
     InetAddress localAddr(sockets::getLocalAddr(socket->fd()));
 
-    LOG_INFO << "TcpServer::newConnection [" << _name << "] - new connection [" << connName << "] from " << peerAddr.toIpPort() << " localAddr = " << localAddr.toIpPort();;
+    LOG_INFO << NET_LOG_SIGN << "TcpServer::newConnection [" << _name << "] - new connection [" << connName << "] from " << peerAddr.toIpPort() << " localAddr = " << localAddr.toIpPort();;
 
     TcpConnectionPtr conn(new TcpConnection(ioLoop, connName, socket, localAddr, peerAddr));
     _connections[connName] = conn;
@@ -84,7 +84,7 @@ void TcpServer::removeConnection(const TcpConnectionPtr& conn)
 void TcpServer::removeConnectionInLoop(const TcpConnectionPtr& conn)
 {
     _loop->assertInLoopThread();
-    LOG_INFO << "TcpServer::removeConnectionInLoop [" << _name << "] - connection " << conn->name();
+    LOG_INFO << NET_LOG_SIGN << "TcpServer::removeConnectionInLoop [" << _name << "] - connection " << conn->name();
     size_t n = _connections.erase(conn->name());
     (void)n;
     BLING_ASSERT(n == 1);

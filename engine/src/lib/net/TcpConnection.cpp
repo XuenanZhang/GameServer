@@ -149,11 +149,12 @@ void TcpConnection::sendInLoop(const void* data, size_t len)
         if (oldLen + remaining >= _hightWaterMark && oldLen < _hightWaterMark && _hightWaterMarkCallback)
         {
             _loop->queueInLoop(std::bind(_hightWaterMarkCallback, shared_from_this(), oldLen + remaining));
-            _outputBuffer.append(static_cast<const char*>(data) + nwrote, remaining);
-            if (!_channel->isWriting())
-            {
-                _channel->enableWriteing();
-            }
+        }
+
+        _outputBuffer.append(static_cast<const char*>(data) + nwrote, remaining);
+        if (!_channel->isWriting())
+        {
+            _channel->enableWriting();
         }
     }
 }
@@ -281,6 +282,7 @@ void TcpConnection::handleRead(Timestamp receiveTime)
        errno = savedErrno;
        LOG_SYSERR << NET_LOG_SIGN << "TcpConnection::handleRead";
        handleError();
+       // handleClose();
    }
 }
 
@@ -296,7 +298,7 @@ void TcpConnection::handleWrite()
             _outputBuffer.retrieve(n);    
             if (_outputBuffer.readableBytes() == 0)
             {
-                _channel->disableWriteing();
+                _channel->disableWriting();
                 if (_writeCompleteCallback)
                 {
                     _loop->queueInLoop(std::bind(_writeCompleteCallback, shared_from_this()));
@@ -335,7 +337,6 @@ void TcpConnection::handleError()
 {
     int err = sockets::getSocketError(_channel->fd());
     LOG_ERROR << NET_LOG_SIGN << "TcpConnection::handleError [" << _name << "] - SO_ERROR = " << err << " " << strerror_tl(err);
-    handleClose();
 }
 
 const char* TcpConnection::stateToString() const

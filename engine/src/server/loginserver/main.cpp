@@ -18,11 +18,14 @@
 #include "net/Buffer.h"
 #include "net/EventLoop.h"
 #include "net/TimerId.h"
+#include "net/EventLoopThread.h"
 #include "net/EventLoopThreadPool.h"
 #include "net/TcpConnection.h"
 #include "net/Acceptor.h"
 #include "net/TcpServer.h"
 #include "net/SocketAPI.h"
+#include "net/Connector.h"
+#include "net/TcpClient.h"
 
 using namespace bling;
 using namespace bling::net;
@@ -333,6 +336,18 @@ void testTcpServer()
     server.setThreadNum(3);
     server.start();
     loop.loop();
+    // Connector c(&loop, listenAddr);
+}
+
+void testTcpClient()
+{
+    EventLoopThread loop;
+    InetAddress serverAddr("127.0.0.1", 1234);
+    TcpClient client(loop.startLoop(), serverAddr, "MyClient");
+    client.connect();
+    CurrentThread::sleepUsec(500*1000);
+    client.disconnect();
+    CurrentThread::sleepUsec(5 * 1000*1000);
 }
 
 void init()
@@ -346,7 +361,8 @@ void init()
 int main()
 {
     init();
-    testTcpServer();
+    // testTcpServer();
+    testTcpClient();
     // TA ta;
     // ta.param = 99;
     uaa(std::unique_ptr<TA>(new TA(100, "new")));

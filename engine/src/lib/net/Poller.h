@@ -17,7 +17,7 @@
 #include "common/Timestamp.h"
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 namespace bling
 {
@@ -48,7 +48,7 @@ public:
     void assertInLoopThread() const;
 
 protected:
-    typedef std::map<int, Channel*> ChannelMap;
+    typedef std::unordered_map<int, Channel*> ChannelMap;
     ChannelMap _channels;
 
 private:

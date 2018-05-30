@@ -19,11 +19,12 @@ namespace bling
 class noncopyable
 {
 protected:  
-    noncopyable() {}  
-    ~noncopyable() {}  
-private:  // emphasize the following members are private  
-    noncopyable( const noncopyable& );  
-    const noncopyable& operator=( const noncopyable& );
+    noncopyable() = default; 
+    ~noncopyable() = default; 
+
+private:
+    noncopyable( const noncopyable& ) = delete;  
+    const noncopyable& operator=( const noncopyable& ) = delete;
 };
 
 };
