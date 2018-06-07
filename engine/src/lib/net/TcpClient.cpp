@@ -122,6 +122,11 @@ void TcpClient::newConnection(std::unique_ptr<Socket> socket)
     conn->setMessageCallback(_messageCallback);
     conn->setWriteCompleteCallback(_writeCompleteCallback);
     conn->setCloseCallback(std::bind(&TcpClient::removeConnection, this , std::placeholders::_1));
+    
+    {
+        MutexLockAuto lock(_mutex);
+        _connection = conn;
+    }
 
     conn->connectEstablished();
 }

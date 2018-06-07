@@ -15,8 +15,8 @@ release:
 	@$(MAKE) GAME_CONFIG=Release all
 
 cleanall:
-	@$(MAKE) GAME_CONFIG=Debug clean 
-	@$(MAKE) GAME_CONFIG=Release clean 
+	# @$(MAKE) GAME_CONFIG=Debug clean 
+	# @$(MAKE) GAME_CONFIG=Release clean 
 	@rm -rf ../objs
 	@rm -rf ../bin
 

@@ -55,6 +55,7 @@ public:
     string getTcpInfoString() const;
 
     void send(const void* data, int len);
+    void send(string&& str);
     void send(Buffer* buffer);
     
     void shutdown(); //not thread safe

@@ -1,7 +1,6 @@
 BIN = loginserver
 
-MY_LIBS = log net
-
+# MY_LIBS = thread log net
 
 
 ifndef GAME_ROOT

@@ -30,7 +30,7 @@ class Thread : bling::noncopyable
 public:
     typedef std::function<void()> ThreadFunc;
 
-    explicit Thread( const ThreadFunc& , const string& name = string());
+    explicit Thread( const ThreadFunc , const string& name = string());
     ~Thread();
 
 public:

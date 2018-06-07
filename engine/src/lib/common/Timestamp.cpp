@@ -1,5 +1,6 @@
-#include "Timestamp.h"
-#include "Date.h"
+#include "common/Timestamp.h"
+#include "common/Date.h"
+#include "common/Utils.h"
 
 #include <sys/time.h>
 #include <stdio.h>
@@ -50,4 +51,10 @@ Timestamp Timestamp::now()
     struct timeval tv;
     gettimeofday(&tv, NULL);
     return Timestamp( tv.tv_sec * kMicroSecondPerSecond + tv.tv_usec);
+}
+
+
+double RandTimer::rand()
+{
+    return _howlong / 2 + utils::random(0, static_cast<int>(_howlong * 1000)) / 1000.f;   
 }

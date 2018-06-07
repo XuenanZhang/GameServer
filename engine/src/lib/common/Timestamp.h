@@ -117,6 +117,83 @@ inline Timestamp addTime(Timestamp timestamp, double seconds)
     return Timestamp(timestamp.getMircoSeconds() + delta);
 }
 
+
+/////////////////////////
+class FixTimer 
+{
+public:
+    FixTimer(const double howlong) : _howlong(howlong) 
+    {
+    }
+
+    FixTimer(const double howlong, Timestamp& timestamp) : _howlong(howlong), _timestamp(timestamp)
+    {
+        _timestamp.addTime(howlong);
+    }
+    ~FixTimer();
+
+    void next(const Timestamp& curr)
+    {
+        _timestamp = curr;
+        _timestamp.addTime(_howlong);
+    }
+
+    bool operator() (const Timestamp& curr)
+    {
+        if ( _timestamp < curr)  
+        {
+            _timestamp = curr;
+            _timestamp.addTime(_howlong); 
+            return true;
+        }
+
+        return false;
+    }
+
+private:
+    const double _howlong;
+    Timestamp _timestamp;
+}; // class FixTimer
+
+class RandTimer 
+{
+public:
+    RandTimer(const double howlong) : _howlong(howlong) 
+    {
+    }
+
+    RandTimer(const double howlong, Timestamp& timestamp) : _howlong(howlong), _timestamp(timestamp)
+    {
+        _timestamp.addTime(rand());
+    }
+    ~RandTimer();
+
+    void next(const Timestamp& curr)
+    {
+        _timestamp = curr;
+        _timestamp.addTime(rand());
+    }
+
+    bool operator() (const Timestamp& curr)
+    {
+        if ( _timestamp < curr)  
+        {
+            _timestamp = curr;
+            _timestamp.addTime(rand()); 
+            return true;
+        }
+
+        return false;
+    }
+
+private:
+    double rand();
+
+private:
+    const double _howlong;
+    Timestamp _timestamp;
+}; // class RandTimer
+
 }; //bling
 
 

@@ -28,16 +28,17 @@ endif
 #编译配置
 INCLUDES := $(GAME_ROOT)/src
 INCLUDES := $(GAME_ROOT)/src/lib
-INCLUDES += $(shell find $(CURDIR) -type d)
-INCLUDES += $(shell find $(GAME_ROOT)/src/lib -type d)
+# INCLUDES += $(shell find $(CURDIR) -type d)
+# INCLUDES += $(shell find $(GAME_ROOT)/src/lib -type d)
 
 #链接配置
-LDFLAGS := -L$(LIBDIR)
+LINK_FLAGS := -L$(LIBDIR)
 ifndef NO_BASE_LIBS
-MY_LIBS += common thread
+MY_LIBS += common thread log net
 MULIT_THREAD = 1
 endif
-LDLIBS := $(addprefix -l, $(MY_LIBS))
+
+LINK_LIBS := $(addprefix -l, $(MY_LIBS))
 
 #########################
 # 额外参数
@@ -46,11 +47,11 @@ LDLIBS := $(addprefix -l, $(MY_LIBS))
 ifdef test
 CPPFLAGS += -DTEST
 INCLUDES += $(GAME_ROOT)/src/lib/test
-LDLIBS += -ltest
+LINK_LIBS += -ltest
 endif
 
 ifdef MULIT_THREAD
-LDLIBS += -lpthread
+LINK_LIBS += -lpthread
 endif
 
 #########################
@@ -98,7 +99,7 @@ endif
 	# CPPFLAGS += -D_DEBUG
 # endif
 
-LDFLAGS += $(MY_LDFLAGS)
+LINK_FLAGS += $(MY_LINK_FLAGS)
 INCLUDES += $(MY_INCLUDE)
 INCLUDES := $(addprefix -I, $(INCLUDES))
 
@@ -109,7 +110,7 @@ INCLUDES := $(addprefix -I, $(INCLUDES))
 # COMPILE.c = $(CC) $(CFLAGS) $(CPPFLAGS) $(KBE_INCLUDES) $(TARGET_ARCH) -c
 COMPILE.cpp = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(INCLUDES) -c
 
-LINK.cpp = $(CXX) $(CXXFLAGS) $(LDFLAGS)
+LINK.cpp = $(CXX) $(CXXFLAGS) $(LINK_FLAGS)
 
 #########################
 # 处理目标文件
@@ -130,6 +131,7 @@ info:
 	@echo OUTPUT_OBJS = $(OUTPUT_OBJS)
 	@echo OUTPUT_DEPS = $(OUTPUT_DEPS)
 	@echo MY_LIBS = $(MY_LIBS)
+	@echo LINK_LIBS = $(LINK_LIBS)
 	@echo INCLUDES = $(INCLUDES)
 
 done:
@@ -177,7 +179,7 @@ $(OUTPUT_OBJDIR)/%.o: $(CURDIR)/%.cpp
 	
 ifdef BIN
 $(OUTPUT_FILE):: $(OUTPUT_OBJS) $(MY_LIBNAMES)
-	$(LINK.cpp) -o $@ $(OUTPUT_OBJS) $(LDLIBS) 
+	$(LINK.cpp) -o $@ $(OUTPUT_OBJS) $(LINK_LIBS) 
 endif
 
 ifdef LIB
@@ -187,7 +189,7 @@ endif
 
 ifdef SO
 $(OUTPUT_FILE):: $(OUTPUT_OBJS) $(MY_LIBNAMES)
-	$(LINK.cc) -shared -o $@ $(OUTPUT_OBJS) $(LDLIBS)
+	$(LINK.cc) -shared -o $@ $(OUTPUT_OBJS) $(LINK_LIBS)
 endif
 
 

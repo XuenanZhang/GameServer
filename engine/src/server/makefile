@@ -4,5 +4,7 @@ endif
 
 all clean:
 	@$(MAKE) -C loginserver  $@
+	@$(MAKE) -C testServer  $@
+	@$(MAKE) -C testClient  $@
 
 

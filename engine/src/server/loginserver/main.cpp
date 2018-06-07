@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+#include "common/Utils.h"
 #include "thread/Thread.h"
 #include "thread/ThreadPool.h"
 #include "common/Mutex.h"
@@ -208,7 +209,6 @@ void exitLoop(string s)
     g_loop->quit();
     LOG_DEBUG << "exit loop";
 }
-**/
 void cancelLoop(string& s)
 {
     LOG_INFO << "s ====== " << s;
@@ -327,45 +327,24 @@ void uaa(std::unique_ptr<TA> ptr)
 {
    printf("ptr == %d  %s\n", ptr->param, ptr->str.c_str()); 
 }
+**/
 
-void testTcpServer()
-{
-    EventLoop loop;
-    InetAddress listenAddr(2000, false, true);
-    TcpServer server(&loop, listenAddr, "zxn");
-    server.setThreadNum(3);
-    server.start();
-    loop.loop();
-    // Connector c(&loop, listenAddr);
-}
-
-void testTcpClient()
-{
-    EventLoopThread loop;
-    InetAddress serverAddr("127.0.0.1", 1234);
-    TcpClient client(loop.startLoop(), serverAddr, "MyClient");
-    client.connect();
-    CurrentThread::sleepUsec(500*1000);
-    client.disconnect();
-    CurrentThread::sleepUsec(5 * 1000*1000);
-}
-
-void init()
-{
-    LOG_INFO << "init";
-    CountDownLatch cd(1);
-    sockets::createNonblocking(AF_INET6);
-    Socket s(999);
-}
+// void init()
+// {
+    // LOG_INFO << "init";
+    // CountDownLatch cd(1);
+    // sockets::createNonblocking(AF_INET6);
+    // Socket s(999);
+    // utils::checkPercent(50);
+// }
 
 int main()
 {
-    init();
+    // init();
     // testTcpServer();
-    testTcpClient();
     // TA ta;
     // ta.param = 99;
-    uaa(std::unique_ptr<TA>(new TA(100, "new")));
+    // uaa(std::unique_ptr<TA>(new TA(100, "new")));
     
 
     // testTimeQueue();

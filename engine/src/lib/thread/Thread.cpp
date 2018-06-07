@@ -19,6 +19,8 @@ namespace CurrentThread
     __thread char t_tidString[32];
     __thread int t_tidStringLength = 6;
     __thread const char* t_threadName = "unkonwn";
+    __thread uint32_t t_randseed = 0; 
+    static_assert(std::is_same<int, pid_t>::value , "pid_t should be int");
 }; // ns CurrentThread
 
 namespace detail 
@@ -48,6 +50,8 @@ struct ThreadData
     {
         *_tid = CurrentThread::tid();
         _tid = NULL;
+        CurrentThread::cacheRandseed();
+
         _latch->countDown();
         _latch = NULL;
 
@@ -93,6 +97,14 @@ void CurrentThread::cacheTid()
     }
 }
 
+void CurrentThread::cacheRandseed()
+{
+    if (t_randseed == 0)
+    {
+        t_randseed = time(NULL) + tid();
+    }
+}
+
 bool CurrentThread::isMainThread()
 {
     return tid() == ::getpid();
@@ -107,8 +119,14 @@ void CurrentThread::sleepUsec(int64_t usec)
 }
 
 std::atomic<int32_t> Thread::_s_numCreated(0);
-Thread::Thread(const ThreadFunc& func, const string& nameArg)
-        : _started(false), _joined(false), _pthreadId(0), _tid(0), _func(func), _name(nameArg), _latch(1)
+Thread::Thread(const ThreadFunc func, const string& nameArg)
+        : _started(false), 
+          _joined(false), 
+          _pthreadId(0), 
+          _tid(0), 
+          _func(std::move(func)), 
+          _name(nameArg), 
+          _latch(1)
 {
     setDefaultName();
 }

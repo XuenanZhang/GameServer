@@ -129,7 +129,7 @@ int Connector::removeAndResetChannel()
     _channel->disableAll();
     _channel->remove();
     int sockfd = _channel->fd();
-    //必须在回调里重置，因为在Channel::handleEvent里
+    //必须在回调里重置，因为可能在Channel::handleEvent里
     _loop->queueInLoop(std::bind(&Connector::resetChannel, this));
     return sockfd;
 }

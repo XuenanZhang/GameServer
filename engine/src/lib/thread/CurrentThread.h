@@ -24,8 +24,10 @@ extern __thread int t_cachedTid;
 extern __thread char t_tidString[32]; 
 extern __thread int t_tidStringLength; 
 extern __thread const char* t_threadName; 
+extern __thread uint32_t t_randseed; 
 
 void cacheTid();
+void cacheRandseed();
 
 inline int tid()
 {

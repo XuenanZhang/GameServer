@@ -84,6 +84,11 @@ void TcpConnection::send(const void* data, int len)
     }    
 }
 
+void TcpConnection::send(string&& message)
+{
+    send(message.c_str(), message.length());
+}
+
 void TcpConnection::send(Buffer* buf)
 {
     if (_state == kConnected)

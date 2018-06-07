@@ -58,7 +58,7 @@ struct sockaddr_in6 getPeerAddr(int sockfd);
 
 bool isSelfConnect(int sockfd);
 
-}; // ns socket
+}; // ns sockets
 
 }; // ns net
 

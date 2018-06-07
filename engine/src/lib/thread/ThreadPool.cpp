@@ -28,7 +28,7 @@ void ThreadPool::start(int32_t numThreads)
     {   
         char id[32];
         snprintf(id, sizeof(id), "%d", i+1);
-        _threads.push_back(std::unique_ptr<bling::Thread>(new bling::Thread(std::bind(&ThreadPool::runInThread, this), _name + id)));
+        _threads.emplace_back(new bling::Thread(std::bind(&ThreadPool::runInThread, this), _name + id));
         _threads[i]->start();
     }   
 
